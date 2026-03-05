@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <Utilities.h>
+#include <string>
 #include "PyoClass.h"
 
 Pyo pyo;
@@ -16,13 +17,19 @@ void Bela_userSettings(BelaInitSettings *settings) {
 
 bool setup(BelaContext *context, void *userData) {
     // Initialize a pyo server.
-    pyo.setup(context->audioOutChannels, context->audioFrames, 
+    pyo.setup(context->audioInChannels, context->audioOutChannels, context->audioFrames, 
               context->audioSampleRate, context->analogOutChannels);
     // Load a python file.
     char filename[] = "main.py";
     int ret = pyo.loadfile(filename, 0);
     if (ret != 0) {
-        printf("Error: file \"%s\" not found", filename);
+		if (ret == 1) {
+			printf("Error: file \"%s\" not found", filename);
+		}
+		else {
+			std::string s = pyo.getErrorMsg();
+			printf(s.c_str());
+		}
         return false;
     }
 

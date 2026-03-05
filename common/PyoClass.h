@@ -1,6 +1,8 @@
 #pragma once
 
 #include "m_pyo.h"
+#include <vector>
+#include <string>
 
 typedef int callPtr(int);
 
@@ -20,13 +22,18 @@ class Pyo {
         int value(const char *name, float *value, int len);
         int set(const char *name, float value);
         int set(const char *name, float *value, int len);
+		void setDebug(int debugState);
+		std::vector<std::string> getStdout();
+		std::string getErrorMsg();
 
     private:
-        int nChannels;
+        int inChannels;
+        int outChannels;
         int bufferSize;
         int sampleRate;
         int nAnalogChannels;
         int nTotalChannels;
+		int debug;
         PyThreadState *interpreter;
         float *pyoInBuffer;
         float *pyoOutBuffer;

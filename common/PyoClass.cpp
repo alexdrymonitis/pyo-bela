@@ -13,12 +13,14 @@
 **
 ** All arguments should be equal to the host audio settings.
 */
-void Pyo::setup(int _nChannels, int _bufferSize, int _sampleRate, int _nAnalogChannels) {
-    nChannels = _nChannels;
+void Pyo::setup(int _inChannels, int _outChannels, int _bufferSize, int _sampleRate, int _nAnalogChannels) {
+    inChannels = _inChannels;
+    outChannels = _outChannels;
     bufferSize = _bufferSize;
     sampleRate = _sampleRate;
     nAnalogChannels = _nAnalogChannels;
-    nTotalChannels = nChannels+nAnalogChannels;
+    nTotalChannels = inChannels+outChannels+nAnalogChannels;
+	debug = 0;
     interpreter = pyo_new_interpreter(sampleRate, bufferSize, nTotalChannels);
     pyoInBuffer = reinterpret_cast<float*>(pyo_get_input_buffer_address(interpreter));
     pyoOutBuffer = reinterpret_cast<float*>(pyo_get_output_buffer_address(interpreter));
@@ -42,8 +44,8 @@ Pyo::~Pyo() {
 */
 void Pyo::fillin(const float *buffer) {
     for (int i=0; i<bufferSize; i++) {
-	    for (int j=0; j<nChannels; j++) {
-	        pyoInBuffer[i*nTotalChannels+j] = buffer[i*nChannels+j];
+	    for (int j=0; j<inChannels; j++) {
+	        pyoInBuffer[i*nTotalChannels+j] = buffer[i*inChannels+j];
 	    }
     }
 }
@@ -59,7 +61,7 @@ void Pyo::fillin(const float *buffer) {
 void Pyo::analogin(const float *buffer) {
     for (int i=0; i<bufferSize; i++) {
         for (int j=0; j<nAnalogChannels; j++) {
-            pyoInBuffer[i*nTotalChannels+j+nChannels] = buffer[i*nAnalogChannels+j];
+            pyoInBuffer[i*nTotalChannels+j+inChannels+outChannels] = buffer[i*nAnalogChannels+j];
         }
     }
 }
@@ -75,8 +77,8 @@ void Pyo::analogin(const float *buffer) {
 void Pyo::process(float *buffer) {
     pyoCallback(pyoId);
     for (int i=0; i<bufferSize; i++) {
-        for (int j=0; j<nChannels; j++) {
-            buffer[i*nChannels+j] = pyoOutBuffer[i*nTotalChannels+j];
+        for (int j=0; j<outChannels; j++) {
+            buffer[i*outChannels+j] = pyoOutBuffer[i*nTotalChannels+j];
         }
     }
 }
@@ -92,7 +94,7 @@ void Pyo::process(float *buffer) {
 void Pyo::analogout(float *buffer) {
     for (int i=0; i<bufferSize; i++) {
         for (int j=0; j<nAnalogChannels; j++) {
-            buffer[i*nAnalogChannels+j] = pyoOutBuffer[i*nTotalChannels+j+nChannels];
+            buffer[i*nAnalogChannels+j] = pyoOutBuffer[i*nTotalChannels+j+inChannels+outChannels];
         }
     }
 }
@@ -118,7 +120,7 @@ void Pyo::midievent(int status, int data1, int data2) {
 **             cleared before executing the file.
 */
 int Pyo::loadfile(const char *file, int add) {
-    return pyo_exec_file(interpreter, file, pyoMsg, add);
+    return pyo_exec_file(interpreter, file, pyoMsg, add, debug);
 }
 
 /*
@@ -140,7 +142,7 @@ int Pyo::loadfile(const char *file, int add) {
 */
 int Pyo::value(const char *name, float value) {
     sprintf(pyoMsg, "%s.value=%f", name, value);
-    return pyo_exec_statement(interpreter, pyoMsg, 0);
+    return pyo_exec_statement(interpreter, pyoMsg, debug);
 }
 
 /*
@@ -170,7 +172,7 @@ int Pyo::value(const char *name, float *value, int len) {
         strcat(pyoMsg, fchar);
     }
     strcat(pyoMsg, "]");
-    return pyo_exec_statement(interpreter, pyoMsg, 0);
+    return pyo_exec_statement(interpreter, pyoMsg, debug);
 }
 
 /*
@@ -192,7 +194,7 @@ int Pyo::value(const char *name, float *value, int len) {
 */
 int Pyo::set(const char *name, float value) {
     sprintf(pyoMsg, "%s=%f", name, value);
-    return pyo_exec_statement(interpreter, pyoMsg, 0);
+    return pyo_exec_statement(interpreter, pyoMsg, debug);
 }
 
 /*
@@ -222,7 +224,14 @@ int Pyo::set(const char *name, float *value, int len) {
         strcat(pyoMsg, fchar);
     }
     strcat(pyoMsg, "]");
-    return pyo_exec_statement(interpreter, pyoMsg, 0);
+    return pyo_exec_statement(interpreter, pyoMsg, debug);
+}
+
+/*
+** Set the debug state
+*/
+void Pyo::setDebug(int debugState) {
+	debug = debugState;
 }
 
 /*
@@ -240,7 +249,29 @@ int Pyo::set(const char *name, float *value, int len) {
 */
 int Pyo::exec(const char *_msg) {
     strcpy(pyoMsg, _msg);
-    return pyo_exec_statement(interpreter, pyoMsg, 0);
+    return pyo_exec_statement(interpreter, pyoMsg, debug);
+}
+
+/*
+** Get the STDOUT as a vector of strings
+*/
+std::vector<std::string> Pyo::getStdout() {
+    std::vector<std::string> out;
+    char *msg;
+    while (pyo_dequeue_stdout(&msg)) {
+		out.emplace_back(msg);   // copy into vector
+		free(msg);               // free allocated C buffer
+    }
+    return out;
+}
+
+/*
+** Return the error message stored to the pyoMsg char array
+** in case the exec() or loadfile() returns a non-zero error code
+*/
+std::string Pyo::getErrorMsg() {
+	std::string s(pyoMsg);
+	return s;
 }
 
 /*
