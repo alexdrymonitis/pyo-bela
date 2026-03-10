@@ -23,7 +23,8 @@ You will need two repos to run pyo projects with Bela platform.
     https://github.com/alexdrymonitis/pyo-bela/
 
 Clone the Pyo-bela repository on your Bela board with:
-git clone https://github.com/alexdrymonitis/pyo-bela.git
+
+    git clone https://github.com/alexdrymonitis/pyo-bela.git
 
 The next steps assumes that the Pyo-bela repository is in /root/Bela 
 and that the board is plugged to the host computer with a usb cable.
