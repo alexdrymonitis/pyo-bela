@@ -9,7 +9,7 @@ typedef int callPtr(int);
 class Pyo {
     public:
         ~Pyo();
-        void setup(int nChannels, int bufferSize, int sampleRate, int nAnalogChannels);
+        void setup(int inChannels, int outChannels, int bufferSize, int sampleRate, int nAnalogChannels);
         void process(float *buffer);
         void fillin(const float *buffer);
         void analogin(const float *buffer);

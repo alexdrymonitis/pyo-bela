@@ -28,7 +28,8 @@ bool setup(BelaContext *context, void *userData) {
 		}
 		else {
 			std::string s = pyo.getErrorMsg();
-			printf(s.c_str());
+			//printf(s.c_str());
+			std::cout << s << std::endl;
 		}
         return false;
     }
