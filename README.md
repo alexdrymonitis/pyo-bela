@@ -4,7 +4,7 @@ How to use pyo on the BeagleBone Black with the Bela cape
 This tutorial has been tested with a board flashed with the 
 Bela image _v1.0.0_ following the official Bela website instructions
 https://learn.bela.io/get-started-guide/bela-gem-get-started/
-on March 10 2026
+on March 10 2026.
 
 Step 1 - Clone or download the needed repos from github
 -------------------------------------------------------
