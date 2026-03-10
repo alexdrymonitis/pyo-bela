@@ -21,7 +21,7 @@ void Pyo::setup(int _inChannels, int _outChannels, int _bufferSize, int _sampleR
     nAnalogChannels = _nAnalogChannels;
     nTotalChannels = inChannels+outChannels+nAnalogChannels;
 	debug = 0;
-    interpreter = pyo_new_interpreter(sampleRate, bufferSize, nTotalChannels);
+    interpreter = pyo_new_interpreter(sampleRate, bufferSize, inChannels, outChannels);
     pyoInBuffer = reinterpret_cast<float*>(pyo_get_input_buffer_address(interpreter));
     pyoOutBuffer = reinterpret_cast<float*>(pyo_get_output_buffer_address(interpreter));
     pyoCallback = reinterpret_cast<callPtr*>(pyo_get_embedded_callback_address(interpreter));
