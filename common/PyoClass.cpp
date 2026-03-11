@@ -13,15 +13,15 @@
 **
 ** All arguments should be equal to the host audio settings.
 */
-void Pyo::setup(int _inChannels, int _outChannels, int _bufferSize, int _sampleRate, int _nAnalogChannels) {
+void Pyo::setup(int _inChannels, int _outChannels, int _bufferSize, int _sampleRate, int _nAnalogInChannels) {
     inChannels = _inChannels;
     outChannels = _outChannels;
     bufferSize = _bufferSize;
     sampleRate = _sampleRate;
-    nAnalogChannels = _nAnalogChannels;
-    nTotalChannels = inChannels+outChannels+nAnalogChannels;
-	debug = 0;
-    interpreter = pyo_new_interpreter(sampleRate, bufferSize, inChannels, outChannels);
+    nAnalogInChannels = _nAnalogInChannels;
+    nTotalInChannels = inChannels + nAnalogInChannels;
+    debug = 0;
+    interpreter = pyo_new_interpreter(sampleRate, bufferSize, inChannels+nAnalogInChannels, outChannels);
     pyoInBuffer = reinterpret_cast<float*>(pyo_get_input_buffer_address(interpreter));
     pyoOutBuffer = reinterpret_cast<float*>(pyo_get_output_buffer_address(interpreter));
     pyoCallback = reinterpret_cast<callPtr*>(pyo_get_embedded_callback_address(interpreter));
@@ -45,7 +45,7 @@ Pyo::~Pyo() {
 void Pyo::fillin(const float *buffer) {
     for (int i=0; i<bufferSize; i++) {
 	    for (int j=0; j<inChannels; j++) {
-	        pyoInBuffer[i*nTotalChannels+j] = buffer[i*inChannels+j];
+	        pyoInBuffer[i*nTotalInChannels+j] = buffer[i*nTotalInChannels+j];
 	    }
     }
 }
@@ -60,8 +60,8 @@ void Pyo::fillin(const float *buffer) {
 */
 void Pyo::analogin(const float *buffer) {
     for (int i=0; i<bufferSize; i++) {
-        for (int j=0; j<nAnalogChannels; j++) {
-            pyoInBuffer[i*nTotalChannels+j+inChannels+outChannels] = buffer[i*nAnalogChannels+j];
+        for (int j=0; j<nAnalogInChannels; j++) {
+            pyoInBuffer[i*nTotalInChannels+j+inChannels] = buffer[i*nAnalogInChannels+j];
         }
     }
 }
@@ -78,7 +78,7 @@ void Pyo::process(float *buffer) {
     pyoCallback(pyoId);
     for (int i=0; i<bufferSize; i++) {
         for (int j=0; j<outChannels; j++) {
-            buffer[i*outChannels+j] = pyoOutBuffer[i*nTotalChannels+j];
+            buffer[i*outChannels+j] = pyoOutBuffer[i*outChannels+j];
         }
     }
 }
@@ -91,13 +91,13 @@ void Pyo::process(float *buffer) {
 ** arguments:
 **   *buffer : float *, float pointer pointing to the host's analog output buffers.
 */
-void Pyo::analogout(float *buffer) {
-    for (int i=0; i<bufferSize; i++) {
-        for (int j=0; j<nAnalogChannels; j++) {
-            buffer[i*nAnalogChannels+j] = pyoOutBuffer[i*nTotalChannels+j+inChannels+outChannels];
-        }
-    }
-}
+//void Pyo::analogout(float *buffer) {
+//    for (int i=0; i<bufferSize; i++) {
+//        for (int j=0; j<nAnalogChannels; j++) {
+//            buffer[i*nAnalogChannels+j] = pyoOutBuffer[i*nTotalChannels+j+inChannels+outChannels];
+//        }
+//    }
+//}
 
 /* 
 ** Need documentation... 

@@ -9,11 +9,11 @@ typedef int callPtr(int);
 class Pyo {
     public:
         ~Pyo();
-        void setup(int inChannels, int outChannels, int bufferSize, int sampleRate, int nAnalogChannels);
+        void setup(int inChannels, int outChannels, int bufferSize, int sampleRate, int nAnalogInChannels);
         void process(float *buffer);
         void fillin(const float *buffer);
         void analogin(const float *buffer);
-        void analogout(float *buffer);
+        //void analogout(float *buffer);
         void clear();
         void midievent(int status, int data1, int data2);
         int loadfile(const char *file, int add);
@@ -29,11 +29,11 @@ class Pyo {
     private:
         int inChannels;
         int outChannels;
+        int nAnalogInChannels;
+        int nTotalInChannels;
         int bufferSize;
         int sampleRate;
-        int nAnalogChannels;
-        int nTotalChannels;
-		int debug;
+        int debug;
         PyThreadState *interpreter;
         float *pyoInBuffer;
         float *pyoOutBuffer;
