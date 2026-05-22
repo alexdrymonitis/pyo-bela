@@ -55,7 +55,7 @@ Whether in the browser or in the terminal (if you SSHed) create a pyo/dist direc
     mkdir pyo
     mkdir pyo/dist
 
-Then copy the Pyo wheel from you computer to this directory with (this command must be typed from your computer, not the Bela):
+Then copy the Pyo wheel from your computer to this directory with (this command must be typed from your computer, not the Bela):
 
     scp pyo-1.0.6-cp311-cp311-linux_aarch64.whl root@bela.local:/root/Bela/pyo/dist
 
@@ -72,7 +72,7 @@ Copy the pyo-bela/build_pyo.sh script to Bela/scripts folder and make it executa
     chmod +x ../scripts/build_pyo.sh
 
 At this point, if you never update the board (i.e. you just flashed your sd card), you
-should call the script update_board to copy the latest framework from Bela to your board:
+should probably call the script update_board to copy the latest framework from Bela to your board (you'll need internet access for this):
 
     cd ../scripts
     ./update_board
