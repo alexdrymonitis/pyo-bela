@@ -38,8 +38,8 @@ instructions on the [release page](https://github.com/alexdrymonitis/pyo-bela/re
     cd pyo-bela
     ./install_pyo_on_board.sh
 
-Step 3 - Install pyo wheel on your computer
--------------------------------------------
+Step 3 - Download pyo wheel on your computer
+--------------------------------------------
 
 If your board doesn't have an internet connection
 download the Bela Gem Pyo wheel from
