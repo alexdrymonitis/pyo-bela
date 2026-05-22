@@ -6,10 +6,18 @@ Bela image _v6.12_ following the official Bela website instructions
 https://learn.bela.io/get-started-guide/bela-gem-get-started/
 on May 22 2026.
 
-Step 1 - Clone or download the needed repos from github
+Step 1 - Flash the Bela image to your SD card
+---------------------------------------------
+
+Flash the Bela image on your SD card.
+You can do that with the BeagleBoard Imager software which you can get from
+https://beagleboard.github.io/bb-imager-rs/bb-imager/1.0.7/install-gui.html
+The imager contains the image from the link on the top of this file
+so you don't need to download it.
+
+Step 2 - Clone or download the needed repos from github
 -------------------------------------------------------
 
-Flash the Bela image on your SD card
 If your board has an internet connection,
 clone the Pyo-bela repository straight on your Bela board,
 otherwise clone it in your computer first.
@@ -29,11 +37,11 @@ If you clone it in your computer, copy it to your board with:
 The next steps assumes that the Pyo-bela repository is in /root/Bela 
 and that the board is plugged to the host computer with a usb cable.
 
-Step 2 - Install pyo wheel on the board
+Step 3 - Install pyo wheel on the board
 ---------------------------------------
 
 If your board has an internet connection, follow this step
-straight in your board, otherwise go to step 3.
+straight in your board, otherwise go to step 4.
 To download and install the latest pyo binaries on the board, run the 
 script _install\_pyo\_on\_board.sh_ from pyo-bela sources (or follow
 instructions on the [release page](https://github.com/alexdrymonitis/pyo-bela/releases)):
@@ -41,7 +49,7 @@ instructions on the [release page](https://github.com/alexdrymonitis/pyo-bela/re
     cd pyo-bela
     ./install_pyo_on_board.sh
 
-Step 3 - Download pyo wheel on your computer
+Step 4 - Download pyo wheel on your computer
 --------------------------------------------
 
 If your board doesn't have an internet connection
@@ -66,7 +74,7 @@ Finally, in the Bela, cd to /root/Bela/pyo/dist and install the wheel with:
 
     python3 -m pip install --user --break-system-packages pyo-1.0.6-cp311-cp311-linux_aarch64.whl
 
-Step 4 - Prepare the host for managing a pyo-bela project
+Step 5 - Prepare the host for managing a pyo-bela project
 -----------------------------------------------------------
 
 Copy the pyo-bela/build_pyo.sh script to Bela/scripts folder and make it executable:
@@ -80,7 +88,7 @@ should probably call the script update_board to copy the latest framework from B
     cd ../scripts
     ./update_board
 
-Step 5 - Compile and run a pyo-bela project
+Step 6 - Compile and run a pyo-bela project
 -------------------------------------------
 
 From Bela/scripts folder, compile and run any of the examples in the 
