@@ -1,5 +1,5 @@
-How to use pyo on the BeagleBone Black with the Bela cape
-=========================================================
+How to use pyo on the PocketBeagle2 with the Bela Gem cape
+==========================================================
 
 This tutorial has been tested with a Bela Gem stereo board flashed with the 
 Bela image _v6.12_ following the official Bela website instructions
