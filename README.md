@@ -14,6 +14,9 @@ You can do that with the BeagleBoard Imager software which you can get from
 https://beagleboard.github.io/bb-imager-rs/bb-imager/1.0.7/install-gui.html.
 The imager contains the image from the link on the top of this README file
 so you don't need to download it.
+Otherwise, you can download it from Bela's website and choose "Custom Image"
+on the imager, in case these are not synced and the imager doesn't have the
+latest image.
 
 Step 2 - Clone or download the needed repos from github
 -------------------------------------------------------
