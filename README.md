@@ -25,7 +25,7 @@ If you do this straight on the Bela, you can either SSH to the board with:
 
     ssh root@bela.local
 
-or you can just type all these commands in the command entry at the bottom part of the window.
+or you can just type all these commands in the command entry at the bottom part of the IDE in your browser.
 Clone the pyo-bela repository with:
 
     git clone https://github.com/alexdrymonitis/pyo-bela.git
